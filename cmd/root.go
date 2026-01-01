@@ -13,11 +13,17 @@ import (
 
 var (
 	printByteCount bool
+	printLineCount bool
+)
+
+const (
+	printByteCountFlagName = "byte"
+	printLineCountFlagName = "line"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "ccwc [-c] file",
+	Use:   "ccwc [-c | -l] file",
 	Short: "word, line, character and byte count", // Same as original wc
 	Long: `This is an imitation of wc command line tool  written in golang.
 Used to find word, line, character and byte count of file.
@@ -29,6 +35,8 @@ Currently supporting only single file.`,
 		switch {
 		case printByteCount:
 			internal.PrintByteCount(args[0])
+		case printLineCount:
+			internal.PrintLineCount(args[0])
 		default:
 			fmt.Fprintf(os.Stderr, "no flag set!")
 		}
@@ -46,6 +54,9 @@ func Execute() {
 
 func init() {
 	// Byte count flag: -c or --byte
-	rootCmd.PersistentFlags().BoolVarP(&printByteCount, "byte", "c", false, "Returns number of bytes")
-	rootCmd.MarkPersistentFlagRequired("byte")
+	rootCmd.PersistentFlags().BoolVarP(&printByteCount, printByteCountFlagName, "c", false, "Returns number of bytes")
+	rootCmd.PersistentFlags().BoolVarP(&printLineCount, printLineCountFlagName, "l", false, "Returns number of lines")
+
+	// Make sure both of them are mutually exclusive
+	rootCmd.MarkFlagsMutuallyExclusive(printByteCountFlagName, printLineCountFlagName)
 }

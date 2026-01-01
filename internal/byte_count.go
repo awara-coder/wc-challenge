@@ -7,14 +7,22 @@ import (
 
 // PrintByteCount reads the file and returns byte count
 func PrintByteCount(filename string) {
-	// Open the file
-	fileInfo, err := os.Stat(filename)
+	byteCount, err := getByteCount(filename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error while opening file: %w", err)
 		os.Exit(1)
 	}
 
-	fileSize := fileInfo.Size()
-	fmt.Fprintf(os.Stdout, "%v %s", fileSize, filename)
+	fmt.Fprintf(os.Stdout, "%v %s", byteCount, filename)
 	os.Exit(0)
+}
+
+func getByteCount(filename string) (int64, error) {
+	fileInfo, err := os.Stat(filename)
+	if err != nil {
+		return 0, fmt.Errorf("error while opening file: %w", err)
+	}
+
+	fileSize := fileInfo.Size()
+	return fileSize, nil
 }
