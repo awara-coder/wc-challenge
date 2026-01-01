@@ -13,8 +13,7 @@ func PrintLineCount(filename string) {
 		os.Exit(1)
 	}
 
-	fmt.Fprintf(os.Stdout, "%v %s", byteCount, filename)
-	os.Exit(0)
+	fmt.Fprintf(os.Stdout, "%v ", byteCount)
 }
 
 func getLineCount(filename string) (int64, error) {
